@@ -27,6 +27,9 @@
 #include "World.h"
 #include "sound.h"
 
+#include <iostream>
+#include <string>
+
 // because of the 'player' crap, we can't  #include "Roaming.h"  easily
 extern Player* getRoamTargetTank();
 
@@ -40,6 +43,51 @@ std::string ScoreboardRenderer::teamScoreSpacingLabel("88 (888-888) 88");
 std::string ScoreboardRenderer::teamCountSpacingLabel("888");
 std::string ScoreboardRenderer::playerLabel("Player");
 
+// sorted flags: - we don't really care how they are sorted
+char* sorted_flags[] = {
+  "High Speed",
+  "Quick Turn",
+  "Agility",
+  "Oscillation Overthruster",
+  "Rapid Fire",
+  "Machine Gun",
+  "Guided Missile",
+  "Laser",
+  "Ricochet",
+  "Super Bullet",
+  "Stealth",
+  "Cloaking",
+  "Invisible Bullet",
+  "Tiny",
+  "Narrow",
+  "Shield",
+  "Steamroller",
+  "Shock Wave",
+  "Phantom Zone",
+  "Genocide",
+  "Jumping",
+  "Identify",
+  "Masquerade",
+  "Burrow",
+  "Seer",
+  "Thief",
+  "Useless",
+  "Wings",
+  "Colorblindness",
+  "Obesity",
+  "Left Turn Only",
+  "Right Turn Only",
+  "Forward Only",
+  "Reverse Only",
+  "Momentum",
+  "Blindness",
+  "Jamming",
+  "Wide Agnle",
+  "No Jumping",
+  "Trigger Happy",
+  "Reverse Controls"
+};
+
 // NOTE: order of sort labels must match SORT_ consts
 const char* ScoreboardRenderer::sortLabels[] = {
   "[Score]",
@@ -50,6 +98,7 @@ const char* ScoreboardRenderer::sortLabels[] = {
   "[TK ratio]",
   "[Team]",
   "[1on1]",
+  "[flag]",
   NULL
 };
 
@@ -869,6 +918,16 @@ int       ScoreboardRenderer::sortCompareI2(const void* _a, const void* _b)
   return b->i2 - a->i2;
 }
 
+// getting the score of the flag, where score is its rank in comparison with the other flags according to the list: sorted_flags[]
+int get_flag_score(char* flagName){
+  for (int i = 0; i < 41; i++){
+    //printf("Comparison: %s, %s\n", flagName, sorted_flags[i]);
+    if(strcmp(flagName, sorted_flags[i]) == 0)
+      return i;
+  }
+  // in case the flag was not found in our list:
+  return -1; 
+}
 
 // creates (allocates) a null-terminated array of Player*
 Player **  ScoreboardRenderer::newSortedList (int sortType, bool obsLast, int *_numPlayers)
@@ -931,6 +990,17 @@ Player **  ScoreboardRenderer::newSortedList (int sortType, bool obsLast, int *_
 	  break;
 	case SORT_CALLSIGN:
 	  sorter[i].cp = p->getCallSign();
+	  break;
+	case SORT_FLAG:
+	  // Sorting by flag type here
+	  //get_flag_score(p->getFlag()->flagName);
+	  char flagName[100];
+	  int flagScore;
+	  sprintf(flagName,"%s", p->getFlag()->flagName.c_str());
+	  //printf("flag_name: %s flagScore: %d\n", flagName, get_flag_score(flagName));
+	  flagScore = get_flag_score(flagName);
+	  sorter[i].i1 = flagScore;
+	  sorter[i].i2 = 0;
 	  break;
 	default:
 	  if (world->allowRabbit())

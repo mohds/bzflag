@@ -66,7 +66,8 @@ public:
   static const int SORT_TKRATIO = 5;
   static const int SORT_TEAM = 6;
   static const int SORT_MYRATIO = 7;
-  static const int SORT_MAXNUM = SORT_MYRATIO;
+  static const int SORT_FLAG = 8;
+  static const int SORT_MAXNUM = SORT_FLAG;
 
   void setTeamScoreY ( float val ) {teamScoreYVal = val;}
   void setRoaming ( bool val ) {roaming = val;}
