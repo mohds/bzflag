@@ -993,11 +993,9 @@ Player **  ScoreboardRenderer::newSortedList (int sortType, bool obsLast, int *_
 	  break;
 	case SORT_FLAG:
 	  // Sorting by flag type here
-	  //get_flag_score(p->getFlag()->flagName);
 	  char flagName[100];
 	  int flagScore;
 	  sprintf(flagName,"%s", p->getFlag()->flagName.c_str());
-	  //printf("flag_name: %s flagScore: %d\n", flagName, get_flag_score(flagName));
 	  flagScore = get_flag_score(flagName);
 	  sorter[i].i1 = flagScore;
 	  sorter[i].i2 = 0;
